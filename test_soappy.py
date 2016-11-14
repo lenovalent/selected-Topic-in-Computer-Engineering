@@ -36,8 +36,11 @@ class webservice:
         director_tag.text = Director
         date_tag = ET.Element('date')
         day_tag = ET.Element('day')
+        day_tag.text = day
         month_tag = ET.Element('month')
+        month_tag.text = month
         year_tag = ET.Element('year')
+        year_tag.text = year
         date_tag.append(day_tag)
         date_tag.append(month_tag)
         date_tag.append(year_tag)
@@ -48,11 +51,51 @@ class webservice:
         new_tag.append(date_tag)
         root.insert(0,new_tag)
         tree.write('MovieAll_SPN.xml')
+    def removeMovie(self,name):
+        tree = ET.parse('MovieAll_SPN.xml')
+        root = tree.getroot()
+        for movie in root.findall('movie'):
+            #print movie.find('name').text
+            if movie.find('name').text == name:
+                #root = movie.getparent()
+                root.remove(movie)
+                tree.write('MovieAll_SPN.xml')
+        return name + " removed"
+    def addInitResolution(self,res):
+        tree = ET.parse('MovieAll_SPN.xml')
+        root = tree.getroot()
+        for movie in root.findall('movie'):
+            res_tag = ET.Element('resolution')
+            res_tag.text = res
+            movie.append(res_tag)
+        tree.write('MovieAll_SPN.xml')
+        return "resolution added"
 
+    def editResolution(self,name,res):
+        tree = ET.parse('MovieAll_SPN.xml')
+        root = tree.getroot()
+        for movie in root.findall('movie'):
+            res_tag = ET.Element('resolution')
+            res_tag.text = res
+            movie.append(res_tag)
+        tree.write('MovieAll_SPN.xml')
+        return "resolution added"
+    
+    def addInitLength(self,length):
+        tree = ET.parse('MovieAll_SPN.xml')
+        root = tree.getroot()
+        for movie in root.findall('movie'):
+            len_tag = ET.Element('length')
+            len_tag.text = length
+            movie.append(len_tag)
+        tree.write('MovieAll_SPN.xml')
+        return "movie length added"
+            
 print "start"
-server = SOAPServer(("localhost", 8081))
+server = SOAPServer(("172.31.23.46", 8081))
 server.registerObject(webservice(), "xml")
 server.serve_forever()
+
 
 
 
