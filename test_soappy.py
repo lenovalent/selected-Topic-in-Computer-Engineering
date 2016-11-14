@@ -51,6 +51,7 @@ class webservice:
         new_tag.append(date_tag)
         root.insert(0,new_tag)
         tree.write('MovieAll_SPN.xml')
+    
     def removeMovie(self,name):
         tree = ET.parse('MovieAll_SPN.xml')
         root = tree.getroot()
@@ -61,6 +62,7 @@ class webservice:
                 root.remove(movie)
                 tree.write('MovieAll_SPN.xml')
         return name + " removed"
+    
     def addInitResolution(self,res):
         tree = ET.parse('MovieAll_SPN.xml')
         root = tree.getroot()
@@ -75,11 +77,11 @@ class webservice:
         tree = ET.parse('MovieAll_SPN.xml')
         root = tree.getroot()
         for movie in root.findall('movie'):
-            res_tag = ET.Element('resolution')
-            res_tag.text = res
-            movie.append(res_tag)
-        tree.write('MovieAll_SPN.xml')
-        return "resolution added"
+            if movie.find('name').text == name:
+                movie.find('resolution').text = res
+                tree.write('MovieAll_SPN.xml')
+                break
+        return "resolution edited"
     
     def addInitLength(self,length):
         tree = ET.parse('MovieAll_SPN.xml')
@@ -90,6 +92,16 @@ class webservice:
             movie.append(len_tag)
         tree.write('MovieAll_SPN.xml')
         return "movie length added"
+
+    def editLength(self,name,length):
+        tree = ET.parse('MovieAll_SPN.xml')
+        root = tree.getroot()
+        for movie in root.findall('movie'):
+            if movie.find('name').text == name:
+                movie.find('length').text = length
+                tree.write('MovieAll_SPN.xml')
+                break
+        return "length edited"
             
 print "start"
 server = SOAPServer(("172.31.23.46", 8081))
